@@ -17,10 +17,14 @@ For more details on using X-Ray, see the [docs](https://docs.aws.amazon.com/xray
 Simply register as a normal plugin
 
 ```js
+
+const AWSXRay = require('aws-xray-sdk');
+
 await server.register({
   plugin: require('hapi-xray'),
   options: {
-    captureAWS: true
+    captureAWS: true,
+    plugins: [AWSXRay.plugins.ECSPlugin]
   }
 });
 ```
@@ -28,16 +32,16 @@ await server.register({
 You can then use the X-Ray SDK as normal in your routes and have `cls` make it accessible though out the current context
 
 ```js
-const xray = require('aws-xray-sdk');
+const AWSXRay = require('aws-xray-sdk');
 
 server.route({
   method: 'GET',
   path: '/items',
   handler: async (request, h) => {
-    const segment = xray.getSegment();
+    const segment = AWSXRay.getSegment();
     
     const item = await new Promise(resolve => {
-      xray.captureFunc('db.getItem', function(dbSubSegment) {
+      AWSXRay.captureFunc('db.getItem', function(dbSubSegment) {
         const item = db.getItem();
         dbSubSegment.addAnnotation('resource', 'db');
         dbSubSegment.addMetadata('item', item);
@@ -52,6 +56,7 @@ server.route({
 
 ### Options
 
+- `plugins` An array of AWS plugins to use (i.e. `[AWSXRay.plugins.EC2Plugin]`)
 - `captureAWS` Enables AWS X-Ray to capture AWS calls
   - This requires having `aws-sdk` installed as a dependency
 - `setLogger` Bind AWS X-Ray to a compatible logging interface `({ trace, debug, info })`

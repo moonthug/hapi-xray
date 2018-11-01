@@ -27,7 +27,7 @@ await server.register({
 
 You can then use the X-Ray SDK as normal in your routes and have `cls` make it accessible though out the current context
 
-```
+```js
 const xray = require('aws-xray-sdk');
 
 server.route({

@@ -32,19 +32,20 @@ const xray = require('aws-xray-sdk');
 
 server.route({
   method: 'GET',
-  path: '/hello',
+  path: '/items',
   handler: async (request, h) => {
     const segment = xray.getSegment();
     
-    await new Promise(resolve => {
+    const item = await new Promise(resolve => {
       xray.captureFunc('db.getItem', function(dbSubSegment) {
         const item = db.getItem();
         dbSubSegment.addAnnotation('resource', 'db');
         dbSubSegment.addMetadata('item', item);
+        resolve(item)
       }, segment);
     });
     
-    return 'hello world';
+    return item;
   }
 });
 ```

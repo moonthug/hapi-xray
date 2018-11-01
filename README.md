@@ -64,3 +64,5 @@ server.route({
 ## Thanks
 
 Based on the hard work @[AWS X-Ray Express Middleware](https://github.com/aws/aws-xray-sdk-node/tree/master/packages/express)
+
+Built with ♥︎ for [Progressive Content](https://www.progressivecontent.com/)

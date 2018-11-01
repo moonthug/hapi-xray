@@ -1,6 +1,6 @@
 {
   "name": "hapi-xray",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "AWS-Xray plugin for Hapi.JS",
   "main": "lib/index.js",
   "scripts": {

@@ -41,11 +41,11 @@ server.route({
     const segment = AWSXRay.getSegment();
     
     const item = await new Promise(resolve => {
-      AWSXRay.captureFunc('db.getItem', function(dbSubSegment) {
+      AWSXRay.captureFunc('db.getItem', dbSubSegment => {
         const item = db.getItem();
         dbSubSegment.addAnnotation('resource', 'db');
         dbSubSegment.addMetadata('item', item);
-        resolve(item)
+        resolve(item);
       }, segment);
     });
     

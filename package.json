@@ -5,13 +5,16 @@
   "main": "lib/index.js",
   "scripts": {
     "lint": "eslint .",
-    "lint:fix": "eslint --fix ./src"
+    "lint:fix": "eslint --fix ./src",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "author": "alex <alex@polyglot.rodeo>",
   "license": "MIT",
   "dependencies": {
     "aws-xray-sdk": "^2.0.1",
-    "debug": "^4.1.0"
+    "debug": "^4.1.0",
+    "snyk": "^1.189.0"
   },
   "devDependencies": {
     "eslint": "^5.4.0",
@@ -39,5 +42,6 @@
   "bugs": {
     "url": "https://github.com/moonthug/hapi-xray/issues"
   },
-  "homepage": "https://github.com/moonthug/hapi-xray#readme"
+  "homepage": "https://github.com/moonthug/hapi-xray#readme",
+  "snyk": true
 }

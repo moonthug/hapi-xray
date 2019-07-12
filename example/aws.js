@@ -1,17 +1,19 @@
 const Hapi = require('hapi');
+const aws = require('aws');
+const xray = require('aws-xray-sdk');
 
 const debug = require('debug')('hapi-xray');
 
 const server = Hapi.server({
   host: 'localhost',
-  port: 8000
+  port: 9000
 });
 
 server.route({
   method: 'GET',
   path: '/',
   handler: (request, h) => {
-    const segment = request.segment;
+    const segment = xray.getSegment();
     segment.addAnnotation('hitController', 'true');
 
     return { hello: 'world' };
@@ -23,7 +25,7 @@ const start = async () => {
     await server.register({
       plugin: require('../'),
       options: {
-        captureAWS: false
+        captureAWS: true
       }
     });
     await server.start();

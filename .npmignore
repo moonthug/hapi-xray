@@ -16,6 +16,7 @@ example
 .eslintrc*
 
 #editor settings
+bin
 .idea
 .editorconfig
 .clinic

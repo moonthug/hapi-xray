@@ -81,4 +81,4 @@ typings/
 ### Project
 
 .reports
-*.iam.csv
+bin

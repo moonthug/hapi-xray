@@ -1,6 +1,8 @@
 const Hapi = require('hapi');
 const xray = require('aws-xray-sdk');
 
+const debug = require('debug')('hapi-xray');
+
 const server = Hapi.server({
   host: 'localhost',
   port: 8000
@@ -8,17 +10,12 @@ const server = Hapi.server({
 
 server.route({
   method: 'GET',
-  path: '/hello',
+  path: '/',
   handler: (request, h) => {
     const segment = xray.getSegment();
-    xray.captureFunc('1', function(subsegment1) {
-      subsegment1.addAnnotation('valid', 'true');
-      xray.captureFunc('2', function(subsegment2) {
-        subsegment2.addMetadata('hello', 'there');
-        console.log('do some stuff...');
-      }, subsegment1);
-    }, segment);
-    return 'hello world';
+    segment.addAnnotation('hitController', 'true');
+
+    return { hello: 'world' };
   }
 });
 

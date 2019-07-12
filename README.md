@@ -12,6 +12,8 @@ opposed to `app.use(AWSXRay.express.openSegment('defaultName'))`)
 
 For more details on using X-Ray, see the [docs](https://docs.aws.amazon.com/xray-sdk-for-nodejs/latest/reference)
 
+It currently only works in 'manual' mode, setting the current 'segment' on each request.
+
 ## Usage
 
 Simply register as a normal plugin
@@ -29,27 +31,18 @@ await server.register({
 });
 ```
 
-You can then use the X-Ray SDK as normal in your routes and have `cls` make it accessible though out the current context
+You can then use the X-Ray SDK as normal in your routes taking the current segment from the request
 
 ```js
-const AWSXRay = require('aws-xray-sdk');
 
 server.route({
   method: 'GET',
   path: '/items',
   handler: async (request, h) => {
-    const segment = AWSXRay.getSegment();
+    const segment = request.segment;
+    segment.addAnnotation('hitController', 'true');
     
-    const item = await new Promise(resolve => {
-      AWSXRay.captureFunc('db.getItem', dbSubSegment => {
-        const item = db.getItem();
-        dbSubSegment.addAnnotation('resource', 'db');
-        dbSubSegment.addMetadata('item', item);
-        resolve(item);
-      }, segment);
-    });
-    
-    return item;
+    return {};
   }
 });
 ```

@@ -4,15 +4,21 @@ const debug = require('debug')('hapi-xray');
 
 const server = Hapi.server({
   host: 'localhost',
-  port: 8000
+  port: 9000
 });
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 server.route({
   method: 'GET',
   path: '/',
-  handler: (request, h) => {
+  handler: async (request, h) => {
     const segment = request.segment;
     segment.addAnnotation('hitController', 'true');
+
+    await sleep(10000);
 
     return { hello: 'world' };
   }

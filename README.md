@@ -1,4 +1,5 @@
 # hapi-xray
+[![Known Vulnerabilities](https://snyk.io/test/github/moonthug/hapi-xray/badge.svg?targetFile=package.json)](https://snyk.io/test/github/moonthug/hapi-xray?targetFile=package.json)
 
 A HapiJS plugin to log requests and subsegments through AWSXray.
 

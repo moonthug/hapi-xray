@@ -11,6 +11,6 @@
   "dependencies": {
     "aws": "0.0.3-2",
     "aws-xray-sdk": "^2.0.1",
-    "hapi": "^17.6.0"
+    "hapi": "^17.8.5"
   }
 }

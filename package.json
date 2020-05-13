@@ -1,6 +1,6 @@
 {
-  "name": "hapi-xray",
-  "version": "2.0.0",
+  "name": "@unbill/hapi-xray",
+  "version": "2.1.0",
   "description": "AWS-Xray plugin for Hapi.JS",
   "main": "lib/index.js",
   "scripts": {
@@ -10,10 +10,13 @@
   "author": "alex <alex@polyglot.rodeo>",
   "license": "MIT",
   "dependencies": {
-    "aws-xray-sdk": "^3.0.0",
     "debug": "^4.1.1"
   },
+  "peerDependencies": {
+    "aws-xray-sdk-core": "^3.0.1"
+  },
   "devDependencies": {
+    "aws-xray-sdk-core": "^3.0.1",
     "eslint": "^6.8.0",
     "eslint-config-airbnb": "^18.1.0",
     "eslint-config-prettier": "^6.11.0",

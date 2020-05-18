@@ -44,7 +44,7 @@ describe('Hapi plugin', function() {
     });
 
     it('should set automatic mode on xray', function() {
-      hapiXray.setup({ isAutomaticMode: false });
+      hapiXray.setup({ automaticMode: false });
       assert.equal(xray.isAutomaticMode(), false);
     });
 
@@ -107,7 +107,7 @@ describe('Hapi plugin', function() {
     });
 
     it('should run the request handler function and create a request segment', async function() {
-      hapiXray.setup({ isAutomaticMode: false });
+      hapiXray.setup({ automaticMode: false });
       const handler = hapiXray.createRequestHandler();
       const result = await handler(request, h);
       assert.isDefined(result);
@@ -128,7 +128,7 @@ describe('Hapi plugin', function() {
         resolveNameStub;
 
       beforeEach(function() {
-        hapiXray.setup({ isAutomaticMode: false });
+        hapiXray.setup({ automaticMode: false });
         newSegmentSpy = sinon.spy(Segment.prototype, 'init');
         addReqDataSpy = sinon.spy(Segment.prototype, 'addIncomingRequestData');
 

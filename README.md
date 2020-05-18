@@ -17,7 +17,7 @@ For more details on using X-Ray, see the [docs](https://docs.aws.amazon.com/xray
 As of version 3.0, the plugin now works in "automatic mode" and uses this mode by default in order to establish parity 
 with the other X-Ray helper libraries (express/restify).
 
-Manual mode can be enabled by setting `isAutomaticMode` to false when specifying options.
+Manual mode can be enabled by setting `automaticMode` to false when specifying options.
 
 ## Usage
 
@@ -62,7 +62,7 @@ server.route({
 
 ### Options
 - `segmentName` Segment name to use in place of default segment name generator
-- `isAutomaticMode` Specifies that X-Ray automatic mode is in use (default true)
+- `automaticMode` Specifies that X-Ray automatic mode is in use (default true)
 - `plugins` An array of AWS plugins to use (i.e. `[AWSXRay.plugins.EC2Plugin]`)
 - `captureAWS` Enables AWS X-Ray to capture AWS calls
   - This requires having `aws-sdk` installed as a dependency

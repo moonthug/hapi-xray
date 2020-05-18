@@ -64,8 +64,9 @@ server.route({
 - `segmentName` Segment name to use in place of default segment name generator
 - `automaticMode` Specifies that X-Ray automatic mode is in use (default true)
 - `plugins` An array of AWS plugins to use (i.e. `[AWSXRay.plugins.EC2Plugin]`)
-- `captureAWS` Enables AWS X-Ray to capture AWS calls
-  - This requires having `aws-sdk` installed as a dependency
+- `captureAWS` Enables AWS X-Ray to capture AWS calls. This requires having `aws-sdk` installed as a peer dependency
+- `captureHTTP` Enables AWS X-Ray to capture all http calls
+- `capturePromises` Enables AWS X-Ray to capture all promises
 - `logger` Bind AWS X-Ray to compatible logging interface `({ trace, debug, info })`
 
 ## Thanks

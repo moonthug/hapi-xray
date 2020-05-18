@@ -5,7 +5,8 @@
   "main": "lib/index.js",
   "scripts": {
     "lint": "eslint .",
-    "lint:fix": "eslint --fix ./src"
+    "lint:fix": "eslint --fix ./src",
+    "test": "mocha --recursive"
   },
   "author": "alex <alex@polyglot.rodeo>",
   "license": "MIT",

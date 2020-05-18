@@ -53,6 +53,8 @@ server.route({
 - `plugins` An array of AWS plugins to use (i.e. `[AWSXRay.plugins.EC2Plugin]`)
 - `captureAWS` Enables AWS X-Ray to capture AWS calls
   - This requires having `aws-sdk` installed as a dependency
+- `captureHTTP` Enables AWS X-Ray to capture all http calls
+- `capturePromises` Enables AWS X-Ray to capture all promises
 - `setLogger` Bind AWS X-Ray to a compatible logging interface `({ trace, debug, info })`
 
 ## Thanks

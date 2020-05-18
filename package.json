@@ -1,5 +1,5 @@
 {
-  "name": "@unbill/hapi-xray",
+  "name": "hapi-xray",
   "version": "3.0.0",
   "description": "AWS-Xray plugin for Hapi.JS",
   "main": "lib/index.js",
@@ -16,7 +16,7 @@
     "aws-xray-sdk-core": "^3.0.1"
   },
   "devDependencies": {
-    "@types/node": "10.17.21",
+    "@types/node": "^10.17.21",
     "@types/mocha": "^7.0.2",
     "@types/chai": "^4.2.11",
     "@types/sinon": "^9.0.0",

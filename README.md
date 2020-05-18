@@ -26,13 +26,14 @@ const AWSXRay = require('aws-xray-sdk');
 await server.register({
   plugin: require('hapi-xray'),
   options: {
+    automaticMode: true,
     captureAWS: true,
     plugins: [AWSXRay.plugins.ECSPlugin]
   }
 });
 ```
 
-You can then use the X-Ray SDK as normal in your routes taking the current segment from the request
+You can then use the X-Ray SDK as normal in your routes taking the current segment from the request (Manual Mode)
 
 ```js
 
@@ -51,6 +52,7 @@ server.route({
 ### Options
 
 - `plugins` An array of AWS plugins to use (i.e. `[AWSXRay.plugins.EC2Plugin]`)
+- `automaticMode` Enables AWS X-Ray automatic mode
 - `captureAWS` Enables AWS X-Ray to capture AWS calls
   - This requires having `aws-sdk` installed as a dependency
 - `captureHTTP` Enables AWS X-Ray to capture all http calls

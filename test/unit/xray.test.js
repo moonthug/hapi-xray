@@ -65,6 +65,18 @@ describe('Hapi plugin', function() {
       hapiXray.setup({ plugins: [xray.plugins.ECSPlugin] });
       assert.equal(pluginSpy.callCount, 1);
     });
+
+    it('should call captureHTTPsGlobal when captureHttp is true', function() {
+      const captureSpy = sinon.spy(xray, 'captureHTTPsGlobal');
+      hapiXray.setup({ captureHTTP: true });
+      assert.equal(captureSpy.callCount, 1);
+    });
+
+    it('should call capturePromise when capturePromises is true', function() {
+      const captureSpy = sinon.spy(xray, 'capturePromise');
+      hapiXray.setup({ capturePromises: true });
+      assert.equal(captureSpy.callCount, 1);
+    });
   });
 
   describe('#createRequestHandler', function() {

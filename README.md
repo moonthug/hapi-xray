@@ -13,7 +13,11 @@ opposed to `app.use(AWSXRay.express.openSegment('defaultName'))`)
 
 For more details on using X-Ray, see the [docs](https://docs.aws.amazon.com/xray-sdk-for-nodejs/latest/reference)
 
-It currently only works in 'manual' mode, setting the current 'segment' on each request.
+### Version 3.0 Breaking Changes
+As of version 3.0, the plugin now works in "automatic mode" and uses this mode by default in order to establish parity 
+with the other X-Ray helper libraries (express/restify).
+
+Manual mode can be enabled by setting `automaticMode` to false when specifying options.
 
 ## Usage
 
@@ -26,14 +30,21 @@ const AWSXRay = require('aws-xray-sdk');
 await server.register({
   plugin: require('hapi-xray'),
   options: {
-    automaticMode: true,
     captureAWS: true,
     plugins: [AWSXRay.plugins.ECSPlugin]
   }
 });
 ```
 
-You can then use the X-Ray SDK as normal in your routes taking the current segment from the request (Manual Mode)
+In automatic mode, you can access the X-Ray segment at any time via the AWSXRay SDK:
+```js
+const AWSXRay = require('aws-xray-sdk-core');
+
+const segment = AWSXRay.getSegment();
+segment.addAnnotation('hitController', 'true');
+```
+
+In manual mode, you can access the current X-Ray segment from the request object:
 
 ```js
 
@@ -50,14 +61,13 @@ server.route({
 ```
 
 ### Options
-
+- `segmentName` Segment name to use in place of default segment name generator
+- `automaticMode` Specifies that X-Ray automatic mode is in use (default true)
 - `plugins` An array of AWS plugins to use (i.e. `[AWSXRay.plugins.EC2Plugin]`)
-- `automaticMode` Enables AWS X-Ray automatic mode
-- `captureAWS` Enables AWS X-Ray to capture AWS calls
-  - This requires having `aws-sdk` installed as a dependency
+- `captureAWS` Enables AWS X-Ray to capture AWS calls. This requires having `aws-sdk` installed as a peer dependency
 - `captureHTTP` Enables AWS X-Ray to capture all http calls
 - `capturePromises` Enables AWS X-Ray to capture all promises
-- `setLogger` Bind AWS X-Ray to a compatible logging interface `({ trace, debug, info })`
+- `logger` Bind AWS X-Ray to compatible logging interface `({ trace, debug, info })`
 
 ## Thanks
 

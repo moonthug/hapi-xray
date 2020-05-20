@@ -4,6 +4,7 @@ const sinon = require('sinon').createSandbox();
 const sinonChai = require('sinon-chai');
 const { assert } = chai;
 
+const xrayPlugin = require('../../lib/plugin');
 const hapiXray = require('../../lib/xray');
 const SegmentEmitter = require('aws-xray-sdk-core/lib/segment_emitter.js');
 const ServiceConnector = require('aws-xray-sdk-core/lib/middleware/sampling/service_connector.js');
@@ -25,6 +26,31 @@ describe('Hapi plugin', function() {
 
   afterEach(function() {
     sinon.restore();
+  });
+
+  describe('#plugin', function() {
+    it('should set up xray with options specified in the plugin', function() {
+      const testLogger = { error: () => 'error', debug: () => 'debug' };
+      const captureAwsSpy = sinon.spy(xray, 'captureAWS');
+      const captureHttpSpy = sinon.spy(xray, 'captureHTTPsGlobal');
+      const capturePromiseSpy = sinon.spy(xray, 'capturePromise');
+
+      xrayPlugin.register(
+        { ext: () => 'test', events: { on: () => 'test' } },
+        {
+          segmentName: 'test segment',
+          captureAWS: true,
+          captureHTTP: true,
+          capturePromises: true,
+          logger: testLogger
+        }
+      );
+      assert.equal(xray.getLogger(), testLogger);
+      assert.equal(mwUtils.defaultName, 'test segment');
+      assert.equal(captureAwsSpy.callCount, 1);
+      assert.equal(captureHttpSpy.callCount, 2);
+      assert.equal(capturePromiseSpy.callCount, 1);
+    });
   });
 
   describe('#setup', function() {

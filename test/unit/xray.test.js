@@ -69,7 +69,7 @@ describe('Hapi plugin', function() {
     it('should call captureHTTPsGlobal when captureHttp is true', function() {
       const captureSpy = sinon.spy(xray, 'captureHTTPsGlobal');
       hapiXray.setup({ captureHTTP: true });
-      assert.equal(captureSpy.callCount, 1);
+      assert.equal(captureSpy.callCount, 2);
     });
 
     it('should call capturePromise when capturePromises is true', function() {

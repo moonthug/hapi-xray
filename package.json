@@ -16,7 +16,7 @@
     "debug": "^4.1.1"
   },
   "peerDependencies": {
-    "aws-xray-sdk-core": "^3.0.1"
+    "aws-xray-sdk-core": "3.x"
   },
   "devDependencies": {
     "@types/node": "^10.17.21",

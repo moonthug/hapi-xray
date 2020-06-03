@@ -1,6 +1,6 @@
 {
-  "name": "hapi-xray",
-  "version": "3.0.3",
+  "name": "@unbill/hapi-xray",
+  "version": "3.0.4",
   "description": "AWS-Xray plugin for Hapi.JS",
   "main": "lib/index.js",
   "scripts": {
@@ -13,7 +13,6 @@
   "author": "alex <alex@polyglot.rodeo>",
   "license": "MIT",
   "dependencies": {
-    "debug": "^4.1.1"
   },
   "peerDependencies": {
     "aws-xray-sdk-core": "3.x"

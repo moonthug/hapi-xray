@@ -16,8 +16,6 @@ const Segment = xray.Segment;
 chai.should();
 chai.use(sinonChai);
 
-const utils = require('../test-utils');
-
 describe('Hapi plugin', function() {
   const defaultName = 'defaultName';
   const hostName = 'expressMiddlewareTest';
@@ -120,34 +118,22 @@ describe('Hapi plugin', function() {
         },
         headers: { host: 'myHostName' }
       };
-
-      req.emitter = new utils.TestEmitter();
-      req.on = utils.onEvent;
-
       res = {
         req: req,
         header: {}
       };
-      res.emitter = new utils.TestEmitter();
-      res.on = utils.onEvent;
 
       request = {
         url: req.url,
         headers: req.headers,
-        raw: { req, res }
+        raw: { req, res },
+        response: res
       };
-    });
-
-    it('should return a request handler function', function() {
-      hapiXray.setup({});
-      const handler = hapiXray.createRequestHandler();
-      assert.isFunction(handler);
     });
 
     it('should run the request handler function and create a request segment', async function() {
       hapiXray.setup({ automaticMode: false });
-      const handler = hapiXray.createRequestHandler();
-      const result = await handler(request, h);
+      const result = await hapiXray.handleRequest(request, h);
       assert.isDefined(result);
       assert.isDefined(request.segment);
       assert.isDefined(request.segment.trace_id);
@@ -159,18 +145,12 @@ describe('Hapi plugin', function() {
     });
 
     describe('when handling a request', function() {
-      let addReqDataSpy,
-        newSegmentSpy,
-        onEventStub,
-        processHeadersStub,
-        resolveNameStub;
+      let addReqDataSpy, newSegmentSpy, processHeadersStub, resolveNameStub;
 
       beforeEach(function() {
         hapiXray.setup({ automaticMode: false });
         newSegmentSpy = sinon.spy(Segment.prototype, 'init');
         addReqDataSpy = sinon.spy(Segment.prototype, 'addIncomingRequestData');
-
-        onEventStub = sinon.stub(res, 'on');
 
         processHeadersStub = sinon
           .stub(mwUtils, 'processHeaders')
@@ -188,16 +168,14 @@ describe('Hapi plugin', function() {
       });
 
       it('should call mwUtils.processHeaders to split the headers, if any', function() {
-        const handler = hapiXray.createRequestHandler();
-        handler(request, h);
+        hapiXray.handleRequest(request, h);
 
         processHeadersStub.should.have.been.calledOnce;
         processHeadersStub.should.have.been.calledWithExactly(request);
       });
 
       it('should call mwUtils.resolveName to find the name of the segment', function() {
-        const handler = hapiXray.createRequestHandler();
-        handler(request, h);
+        hapiXray.handleRequest(request, h);
 
         resolveNameStub.should.have.been.calledOnce;
         resolveNameStub.should.have.been.calledWithExactly(
@@ -206,8 +184,7 @@ describe('Hapi plugin', function() {
       });
 
       it('should create a new segment', function() {
-        const handler = hapiXray.createRequestHandler();
-        handler(request, h);
+        hapiXray.handleRequest(request, h);
 
         newSegmentSpy.should.have.been.calledOnce;
         newSegmentSpy.should.have.been.calledWithExactly(
@@ -218,33 +195,18 @@ describe('Hapi plugin', function() {
       });
 
       it('should add a new http property on the segment', function() {
-        const handler = hapiXray.createRequestHandler();
-        handler(request, h);
+        hapiXray.handleRequest(request, h);
 
         addReqDataSpy.should.have.been.calledOnce;
         addReqDataSpy.should.have.been.calledWithExactly(
           sinon.match.instanceOf(IncomingRequestData)
         );
       });
-
-      it('should add a finish and close event to the response', function() {
-        const handler = hapiXray.createRequestHandler();
-        handler(request, h);
-
-        onEventStub.should.have.been.calledTwice;
-        onEventStub.should.have.been.calledWithExactly(
-          'finish',
-          sinon.match.typeOf('function')
-        );
-        onEventStub.should.have.been.calledWithExactly(
-          'close',
-          sinon.match.typeOf('function')
-        );
-      });
     });
 
     describe('when the request completes', function() {
       beforeEach(function() {
+        hapiXray.setup({ automaticMode: false });
         sinon.stub(SegmentEmitter);
         sinon.stub(ServiceConnector);
       });
@@ -258,11 +220,9 @@ describe('Hapi plugin', function() {
           .stub(xray.utils, 'getCauseTypeFromHttpStatus')
           .returns('error');
 
-        const handler = hapiXray.createRequestHandler();
-        handler(request, h);
-
+        hapiXray.handleRequest(request, h);
         res.statusCode = 400;
-        res.emitter.emit('finish');
+        hapiXray.handleResponse(request);
 
         assert.equal(request.segment.error, true);
         getCauseStub.should.have.been.calledWith(400);
@@ -273,33 +233,29 @@ describe('Hapi plugin', function() {
           .stub(xray.utils, 'getCauseTypeFromHttpStatus')
           .returns('fault');
 
-        const handler = hapiXray.createRequestHandler();
-        handler(request, h);
+        hapiXray.handleRequest(request, h);
 
         res.statusCode = 500;
-        res.emitter.emit('finish');
+        hapiXray.handleError(request, new Error('test Error!'));
+        hapiXray.handleResponse(request);
 
         assert.equal(request.segment.fault, true);
         getCauseStub.should.have.been.calledWith(500);
       });
 
       it('should add the throttle flag and error flag on the segment on a 429', function() {
-        const handler = hapiXray.createRequestHandler();
-        handler(request, h);
-
+        hapiXray.handleRequest(request, h);
         res.statusCode = 429;
-        res.emitter.emit('finish');
+        hapiXray.handleResponse(request);
 
         assert.equal(request.segment.throttle, true);
         assert.equal(request.segment.error, true);
       });
 
       it('should add nothing on anything else', function() {
-        const handler = hapiXray.createRequestHandler();
-        handler(request, h);
-
+        hapiXray.handleRequest(request, h);
         res.statusCode = 200;
-        res.emitter.emit('finish');
+        hapiXray.handleResponse(request);
 
         assert.notProperty(request.segment, 'error');
         assert.notProperty(request.segment, 'fault');

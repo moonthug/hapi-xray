@@ -1,3 +1,8 @@
+# **Obsolete**
+This package has now been merged into the official [aws-xray-sdk-node](https://github.com/aws/aws-xray-sdk-node/tree/master/sdk_contrib/hapi)
+
+The new package is available as [aws-xray-sdk-hapi](https://www.npmjs.com/package/aws-xray-sdk-hapi)
+
 # hapi-xray
 [![Known Vulnerabilities](https://snyk.io/test/github/moonthug/hapi-xray/badge.svg?targetFile=package.json)](https://snyk.io/test/github/moonthug/hapi-xray?targetFile=package.json)
 
